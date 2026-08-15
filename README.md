@@ -182,6 +182,7 @@ On-Time Delivery Rate % = 1 - [Late Delivery Rate %]
 ```
 ---
 
+
 ## 💡 Strategic Recommendations & Financial Impact
 1. Carrier SLA Enforcement: Renegotiate agreements with logistics carriers to enforce explicit performance penalties, targeting the elimination of the 1.60-day average overdue delay.
 
@@ -190,6 +191,7 @@ On-Time Delivery Rate % = 1 - [Late Delivery Rate %]
 3. Discount Policy Governance: Audit discount allocations (currently averaging 10.17%) to prevent issuing automatic promotional markdowns on orders already suffering from shipment delays.
 
 4. Target ROI Impact: Reducing late shipments by 25% will directly fix 24,821 delayed orders, bringing the overall late delivery rate down from 55% to 41.25% and preserving operating profit margins.
+
 
 ## 👤 Author
 * **Aref Saleh** — *Data & BI Analyst*
