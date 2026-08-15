@@ -85,3 +85,113 @@ RETURN
         CumulativeRatio <= 0.95, "Class B",
         "Class C"
     )
+
+// 1. Total Sales
+Total Sales = SUM('DataCoSupplyChainDataset'[Sales])
+
+// 2. Total Orders
+Total Orders = DISTINCTCOUNT('DataCoSupplyChainDataset'[Order Id])
+
+// 3. Total Quantity Sold
+Total Quantity Sold = SUM('DataCoSupplyChainDataset'[Order Item Quantity])
+
+// 4. Total Unique Products
+Total Unique Products = DISTINCTCOUNT('DataCoSupplyChainDataset'[Product Card Id])
+
+// 5. Avg Actual Delivery Days (SLA Market Context Check)
+Avg Actual Delivery Days = 
+IF(
+    ISINSCOPE('DataCoSupplyChainDataset'[Market]),
+    CALCULATE(
+        AVERAGE('DataCoSupplyChainDataset'[Days for shipping (real)])
+    ),
+    CALCULATE(
+        AVERAGE('DataCoSupplyChainDataset'[Days for shipping (real)]),
+        ALL('DataCoSupplyChainDataset'[Market])
+    )
+)
+
+// 6. Avg Discount Rate
+Avg Discount Rate = AVERAGE('DataCoSupplyChainDataset'[Order Item Discount Rate])
+
+// 7. Avg Overdue Days
+Avg Overdue Days = 
+AVERAGEX(
+    FILTER(
+        'DataCoSupplyChainDataset',
+        'DataCoSupplyChainDataset'[Late_delivery_risk] = 1
+    ),
+    'DataCoSupplyChainDataset'[Days for shipping (real)] - 'DataCoSupplyChainDataset'[Days for shipment (scheduled)]
+)
+
+// 8. Class A Revenue Share %
+Class A Revenue Share % = 
+DIVIDE(
+    CALCULATE(
+        [Total Sales],
+        'DataCoSupplyChainDataset'[ABC Category] = "Class A"
+    ),
+    [Total Sales],
+    0
+)
+
+// 9. Cumulative Sales % (Pareto ABC Calculation)
+Cumulative Sales % = 
+VAR CurrentProductSales = [Total Sales]
+VAR AllSales = CALCULATE([Total Sales], ALL('DataCoSupplyChainDataset'[Product Card Id]))
+VAR RunningTotalSales = 
+    CALCULATE(
+        [Total Sales],
+        FILTER(
+            ALL('DataCoSupplyChainDataset'[Product Card Id]),
+            [Total Sales] >= CurrentProductSales
+        )
+    )
+RETURN
+DIVIDE(RunningTotalSales, AllSales, 0)
+
+// 10. High Risk Products Count
+High Risk Products Count = 
+COUNTROWS(
+    FILTER(
+        VALUES('DataCoSupplyChainDataset'[Product Card Id]),
+        [Late Delivery Rate %] > 0.50
+    )
+)
+
+// 11. Late Delivery Rate %
+Late Delivery Rate % = 
+DIVIDE(
+    CALCULATE(
+        COUNTROWS('DataCoSupplyChainDataset'),
+        'DataCoSupplyChainDataset'[Late_delivery_risk] = 1
+    ),
+    COUNTROWS('DataCoSupplyChainDataset'),
+    0
+)
+
+// 12. Late Orders
+Late Orders = 
+CALCULATE(
+    DISTINCTCOUNT('DataCoSupplyChainDataset'[Order Id]),
+    'DataCoSupplyChainDataset'[Late_delivery_risk] = 1
+)
+
+// 13. On-Time Delivery Rate %
+On-Time Delivery Rate % = 1 - [Late Delivery Rate %]
+```
+---
+
+///💡 Strategic Recommendations & Financial Impact
+1.Carrier SLA Enforcement: Renegotiate agreements with logistics carriers to enforce explicit performance penalties, targeting the elimination of the 1.60-day average overdue delay.
+
+2.Priority Fulfillment Track for Class A SKUs: Establish an expedited handling protocol for Class A inventory, safeguarding 76.9% of company revenue.
+
+3.Discount Policy Governance: Audit discount allocations (currently averaging 10.17%) to prevent issuing automatic promotional markdowns on orders already suffering from shipment delays.
+
+Target ROI Impact: Reducing late shipments by 25% will directly fix 24,821 delayed orders, bringing the overall late delivery rate down from 55% to 41.25% and preserving operating profit margins.
+
+👤 Author
+Aref Saleh — Data & BI Analyst
+
+LinkedIn: https://www.linkedin.com/in/aref-saleh/
