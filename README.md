@@ -195,5 +195,4 @@ On-Time Delivery Rate % = 1 - [Late Delivery Rate %]
 
 ## 👤 Author
 * **Aref Saleh** — *Data & BI Analyst*
- 
 * **LinkedIn:** https://www.linkedin.com/in/aref-saleh/
