@@ -193,5 +193,5 @@ Target ROI Impact: Reducing late shipments by 25% will directly fix 24,821 delay
 
 👤 Author
 Aref Saleh — Data & BI Analyst
-
+* **LinkedIn:** [https://www.linkedin.com/in/aref-saleh/](https://www.linkedin.com/in/aref-saleh/)
 LinkedIn: https://www.linkedin.com/in/aref-saleh/
